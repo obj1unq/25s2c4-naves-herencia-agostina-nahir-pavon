@@ -1,21 +1,39 @@
-class NaveDeCarga {
+class Nave{
+	var property velocidad 
 
-	var velocidad = 0
+	method propulsar() {
+		velocidad = (velocidad + 20000).min(30000)
+	}
+
+	method prepararParaViajar() {
+		velocidad = (velocidad + 15000).min(300000) 
+	}
+
+	method encontrarseConUnEnemigo() {
+		self.recibirAmenaza()
+		self.propulsar()
+	} 
+
+	method recibirAmenaza() 
+
+}
+
+class NaveDeCarga inherits Nave{
+
 	var property carga = 0
 
 	method sobrecargada() = carga > 100000
 
 	method excedidaDeVelocidad() = velocidad > 100000
 
-	method recibirAmenaza() {
+	override method recibirAmenaza() {
 		carga = 0
 	}
 
 }
 
-class NaveDePasajeros {
+class NaveDePasajeros inherits Nave{
 
-	var velocidad = 0
 	var property alarma = false
 	const cantidadDePasajeros = 0
 
@@ -25,14 +43,14 @@ class NaveDePasajeros {
 
 	method estaEnPeligro() = velocidad > self.velocidadMaximaLegal() or alarma
 
-	method recibirAmenaza() {
+	override method recibirAmenaza() {
 		alarma = true
 	}
 
 }
 
-class NaveDeCombate {
-	var property velocidad = 0
+class NaveDeCombate inherits Nave{
+	
 	var property modo = reposo
 	const property mensajesEmitidos = []
 
@@ -44,10 +62,17 @@ class NaveDeCombate {
 
 	method estaInvisible() = velocidad < 10000 and modo.invisible()
 
-	method recibirAmenaza() {
+	override method recibirAmenaza() {
 		modo.recibirAmenaza(self)
 	}
 
+	method emitirMensaje() {
+	  modo.mesaje(self)
+	}
+
+	method mensajeDeReposo() = "Saliendo en misión"
+
+	method mensajeDeAtaque() = "Volviendo a la base"
 }
 
 object reposo {
@@ -57,6 +82,8 @@ object reposo {
 	method recibirAmenaza(nave) {
 		nave.emitirMensaje("¡RETIRADA!")
 	}
+
+	method mesaje(nave) = nave.mensajeDeReposo()
 
 }
 
@@ -68,4 +95,23 @@ object ataque {
 		nave.emitirMensaje("Enemigo encontrado")
 	}
 
+	method mesaje(nave) = nave.mensajeDeAtaque()
+
+}
+
+
+class NaveDeResiduoRadictivo inherits Nave{
+	var property selladaAlVacio = false
+
+	override method recibirAmenaza() {
+		if (selladaAlVacio)
+		 self.velocidad(0) 
+		else super()
+	}
+
+	override method prepararParaViajar() {
+		super()
+		selladaAlVacio = true
+	}
+	
 }
