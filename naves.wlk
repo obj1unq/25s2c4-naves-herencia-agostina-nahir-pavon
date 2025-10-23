@@ -1,12 +1,19 @@
 class Nave{
-	var property velocidad 
+	var property velocidad = 0
+	const velocidadPorPropulsion = 20000
+	const velocidadParaViajar = 15000
+	const limiteDeVelocidad = 300000
 
 	method propulsar() {
-		velocidad = (velocidad + 20000).min(30000)
+		self.incrementarVelocidad(velocidadPorPropulsion)
 	}
 
-	method prepararParaViajar() {
-		velocidad = (velocidad + 15000).min(300000) 
+	method prepararseParaViajar() {
+		self.incrementarVelocidad(velocidadParaViajar)
+	}
+
+	method incrementarVelocidad(incrementoVelocidad) {
+		velocidad = (velocidad + incrementoVelocidad).min(limiteDeVelocidad)
 	}
 
 	method encontrarseConUnEnemigo() {
@@ -109,7 +116,7 @@ class NaveDeResiduoRadictivo inherits Nave{
 		else super()
 	}
 
-	override method prepararParaViajar() {
+	override method prepararseParaViajar() {
 		super()
 		selladaAlVacio = true
 	}
